@@ -23,7 +23,7 @@ export class UsersService {
   }
 
   // ล็อกอินผู้ใช้และสร้าง JWT
-  async login(email: string, password: string): Promise<string> {
+  async login(email: string, password: string): Promise<{ accessToken: string; user: any }> {
     const user = await this.prisma.user.findUnique({
       where: { email },
     });
@@ -37,10 +37,29 @@ export class UsersService {
       throw new Error('Invalid credentials');
     }
 
-    const payload = { sub: user.id, role: user.role };
-    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const updateUser = await this.prisma.user.update({
+        where: { email },
+        data: { 
+            updatedAt: new Date(),
+            lastLogin: new Date(),
+        },
+    });
 
-    return token;
+    const payload = { sub: user.id, role: user.role };
+    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1d' });
+
+    return{
+        accessToken: token,
+        user: {
+            id: updateUser.id,
+            name: updateUser.name,
+            email: updateUser.email,
+            role: updateUser.role,
+            createdAt: updateUser.createdAt,
+            updatedAt: updateUser.updatedAt,
+            lastLogin: updateUser.updatedAt,
+        },
+    };
   }
 
   // ค้นหาผู้ใช้โดยอีเมล์

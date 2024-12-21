@@ -34,4 +34,5 @@ model User {
   verificationToken   String?                                // Optional token for email verification
   createdAt           DateTime @default(now())               // Auto-set creation timestamp
   updatedAt           DateTime @updatedAt                    // Auto-update modification timestamp
+  lastLogin           DateTime?                              // Last login timestamp  
 }
