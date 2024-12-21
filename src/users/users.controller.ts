@@ -1,4 +1,4 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, BadRequestException } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
@@ -11,8 +11,14 @@ export class UsersController {
     @Post('register')
     async register(@Body() body: RegisterDto) {
         const { name, email, password } = body;
-        const user = await this.usersService.register(name, email, password);
-        return user;
+        try {
+           const user = await this.usersService.register(name, email, password);
+        return user; 
+        } catch (error) {
+            throw new BadRequestException('This email is already registered.');
+        }
+        throw new Error('An unexpected error occurred');
+        
     }
 
     // Endpoint สำหรับล็อกอิน

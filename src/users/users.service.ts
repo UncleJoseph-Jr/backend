@@ -10,6 +10,15 @@ export class UsersService {
 
   // ลงทะเบียนผู้ใช้
   async register(name: string, email: string, password: string): Promise<User> {
+
+    const existingUser = await this.prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (existingUser) {
+      throw new Error('Email already exists');
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = await this.prisma.user.create({
       data: {

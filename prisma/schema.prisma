@@ -23,6 +23,13 @@ enum Role {
   STORE       // Store with limited control
 }
 
+// Define the UserStatus enum
+enum Status {
+  ACTIVE  // User is active and can access the system
+  INACTIVE // User is inactive and cannot access the system
+  BANNED   // User is banned and cannot access the system
+}
+
 // Define the User model for user accounts
 model User {
   id                  Int      @id @default(autoincrement()) // Primary key
@@ -31,6 +38,7 @@ model User {
   password            String                                 // Hashed password
   role                Role     @default(USER)                // Role, default is USER
   isActive            Boolean  @default(true)                // Indicates if the user account is active
+  status              Status   @default(ACTIVE)              // Status, default is ACTIVE
   verificationToken   String?                                // Optional token for email verification
   createdAt           DateTime @default(now())               // Auto-set creation timestamp
   updatedAt           DateTime @updatedAt                    // Auto-update modification timestamp
