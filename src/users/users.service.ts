@@ -16,7 +16,7 @@ export class UsersService {
     });
 
     if (existingUser) {
-      throw new Error('Email already exists');
+      throw new BadRequestException('Email or password is incorrect');
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -32,18 +32,20 @@ export class UsersService {
   }
 
   // ล็อกอินผู้ใช้และสร้าง JWT
-  async login(email: string, password: string): Promise<{ accessToken: string; user: any }> {
+  async login(email: string, password: string): Promise<{ accessToken: string; user: any }> { 
     const user = await this.prisma.user.findUnique({
       where: { email },
     });
 
     if (!user) {
-      throw new Error('User not found');
+      // เปลี่ยนข้อความ error เป็น 'Email or password is incorrect'
+      throw new BadRequestException('Email or password is incorrect');
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      throw new Error('Invalid credentials');
+      // เปลี่ยนข้อความ error เป็น 'Email or password is incorrect'
+      throw new BadRequestException('Email or password is incorrect');
     }
 
     const updateUser = await this.prisma.user.update({
@@ -57,7 +59,7 @@ export class UsersService {
     const payload = { sub: user.id, role: user.role };
     const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1d' });
 
-    return{
+    return {
         accessToken: token,
         user: {
             id: updateUser.id,
@@ -66,17 +68,18 @@ export class UsersService {
             role: updateUser.role,
             createdAt: updateUser.createdAt,
             updatedAt: updateUser.updatedAt,
-            lastLogin: updateUser.updatedAt,
+            lastLogin: updateUser.lastLogin, // ใช้ lastLogin ที่อัปเดตล่าสุด
         },
     };
-  }
+}
+
 
   // ฟังก์ชันเปลี่ยนรหัสผ่าน
   async changePassword(userId: number, currentPassword: string, newPassword: string): Promise<string> {
 
-    console.log('userId:', userId);
-    console.log('currentPassword:', currentPassword);
-    console.log('newPassword:', newPassword);
+    // console.log('userId:', userId);
+    // console.log('currentPassword:', currentPassword);
+    // console.log('newPassword:', newPassword);
     
   // ตรวจสอบ user โดยใช้ userId
   const user = await this.prisma.user.findUnique({
@@ -88,6 +91,11 @@ export class UsersService {
   // ตรวจสอบว่าพบ user หรือไม่
   if (!user) {
     throw new Error('User not found');
+  }
+
+  const isMatch = await bcrypt.compare(currentPassword, user.password);
+  if (!isMatch) {
+    throw new Error('Invalid current password');
   }
 
   // ตรวจสอบ password เดิม

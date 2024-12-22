@@ -39,7 +39,7 @@ export class UsersController {
 
   // Endpoint สำหรับเปลี่ยนรหัสผ่าน
   @UseGuards(AuthGuard('jwt')) // ใช้ AuthGuard ที่ลงทะเบียน 'jwt'
-  @Post('change-password')
+  @Post('changepassword')
   async changePassword(
     @Req() req,
     @Body('currentPassword') currentPassword: string,
