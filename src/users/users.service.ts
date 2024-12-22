@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import * as bcrypt from 'bcryptjs';
 import * as jwt from 'jsonwebtoken';
@@ -70,6 +70,43 @@ export class UsersService {
         },
     };
   }
+
+  // ฟังก์ชันเปลี่ยนรหัสผ่าน
+  async changePassword(userId: number, currentPassword: string, newPassword: string): Promise<string> {
+
+    console.log('userId:', userId);
+    console.log('currentPassword:', currentPassword);
+    console.log('newPassword:', newPassword);
+    
+  // ตรวจสอบ user โดยใช้ userId
+  const user = await this.prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+  });
+
+  // ตรวจสอบว่าพบ user หรือไม่
+  if (!user) {
+    throw new Error('User not found');
+  }
+
+  // ตรวจสอบ password เดิม
+  const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
+  if (!isPasswordValid) {
+    throw new Error('Current password is incorrect');
+  }
+
+  // เข้ารหัส password ใหม่
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+  // อัปเดต password
+  await this.prisma.user.update({
+    where: { id: userId },
+    data: { password: hashedPassword },
+  });
+
+  return 'Password updated successfully';
+}
 
   // ค้นหาผู้ใช้โดยอีเมล์
   async findByEmail(email: string): Promise<User | null> {
