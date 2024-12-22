@@ -46,7 +46,7 @@ export class UsersController {
     @Body('newPassword') newPassword: string,
   ) {
     const userId = req.user?.id; // ดึง userId จาก JWT payload
-    console.log('userId from JWT:', userId); // ตรวจสอบว่า userId ถูกดึงมาหรือไม่
+    // console.log('userId from JWT:', userId); // ตรวจสอบว่า userId ถูกดึงมาหรือไม่
     if (!userId) {
       throw new BadRequestException('Invalid user token');
     }
