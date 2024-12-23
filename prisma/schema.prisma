@@ -36,6 +36,7 @@ model User {
   name                String   @db.VarChar(50)               // User's name (max 50 characters)
   email               String   @unique @db.VarChar(100)      // Unique email address (max 100 characters)
   password            String                                 // Hashed password
+  phoneNumber         String?  @db.VarChar(20)                // Optional phone number (max 20 characters)
   role                Role     @default(USER)                // Role, default is USER
   isActive            Boolean  @default(true)                // Indicates if the user account is active
   status              Status   @default(ACTIVE)              // Status, default is ACTIVE

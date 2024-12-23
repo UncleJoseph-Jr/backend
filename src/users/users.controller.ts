@@ -20,9 +20,9 @@ export class UsersController {
   // Endpoint สำหรับสมัครสมาชิก
   @Post('register')
   async register(@Body() body: RegisterDto) {
-    const { name, email, password } = body;
+    const { name, email, password, phoneNumber } = body;
     try {
-      const user = await this.usersService.register(name, email, password);
+      const user = await this.usersService.register(name, email, password, phoneNumber);
       return user;
     } catch (error) {
       throw new BadRequestException('This email is already registered.');

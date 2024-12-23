@@ -9,7 +9,7 @@ export class UsersService {
   constructor(private prisma: PrismaService) {}
 
   // ลงทะเบียนผู้ใช้
-  async register(name: string, email: string, password: string): Promise<User> {
+  async register(name: string, email: string, password: string, phoneNumber: string): Promise<User> {
 
     const existingUser = await this.prisma.user.findUnique({
       where: { email },
@@ -25,6 +25,7 @@ export class UsersService {
         name,
         email,
         password: hashedPassword,
+        phoneNumber,
         role: 'USER', // กำหนด role เป็น USER โดยปริยาย
       },
     });
@@ -65,6 +66,7 @@ export class UsersService {
             id: updateUser.id,
             name: updateUser.name,
             email: updateUser.email,
+            phoneNumber: updateUser.phoneNumber,
             role: updateUser.role,
             createdAt: updateUser.createdAt,
             updatedAt: updateUser.updatedAt,
