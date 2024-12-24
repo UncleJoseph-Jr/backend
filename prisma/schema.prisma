@@ -21,6 +21,7 @@ enum Role {
   MODERATOR   // Moderator with control
   STAFF       // Staff with limited control 
   STORE       // Store with limited control
+  MERCHANT    // Merchant with limited control
 }
 
 // Define the UserStatus enum
@@ -48,24 +49,26 @@ model User {
 
 model Merchant {
   id Int @id @default(autoincrement())
-  name String
-  category String
-  description String?
-  openingTime String
-  closingTime String
-  phoneNumber String?
-  isVerified Boolean @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  menus Menu[]
+  name                String
+  email               String?   @unique
+  password            String?
+  category            String
+  description         String?
+  openingTime         String
+  closingTime         String
+  phoneNumber         String?
+  isVerified          Boolean   @default(false)
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  menus               Menu[]
 }
 
 model Menu {
-  id Int @id @default(autoincrement())
-  name String
-  description String?
-  price Float
-  imageUrl String?
-  merchantId Int
-  merchant Merchant @relation(fields: [merchantId], references: [id])
+  id                  Int       @id @default(autoincrement())
+  name                String
+  description         String?
+  price               Float
+  imageUrl            String?
+  merchantId          Int
+  merchant            Merchant  @relation(fields: [merchantId], references: [id])
 }

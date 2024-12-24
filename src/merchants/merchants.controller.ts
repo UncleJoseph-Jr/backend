@@ -7,6 +7,19 @@ import { UpdateMerchantDto } from './dto/update-merchant.dto';
 export class MerchantsController {
     constructor(private readonly merchantsService: MerchantsService) {}
 
+    @Post('register')
+    async register(@Body() body: CreateMerchantDto) {
+        return this.merchantsService.createMerchant(body);
+    }
+
+    @Post('login')
+    async login(
+        @Body('email') email: string,
+        @Body('password') password: string,
+    ) {
+        return this.merchantsService.loginMerchant(email, password);
+    }
+
     @Post()
     createMerchant(@Body() dto: CreateMerchantDto) {
         return this.merchantsService.createMerchant(dto);
