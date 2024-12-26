@@ -31,6 +31,8 @@ export class MerchantsService {
       closingTime,
       email,
       password,
+      latitude,
+      longitude,
     } = data;
 
     // ตรวจสอบว่า email มีอยู่แล้วหรือไม่
@@ -54,6 +56,8 @@ export class MerchantsService {
         closingTime,
         email,
         password: hashedPassword,
+        latitude,
+        longitude,
       },
     });
   }

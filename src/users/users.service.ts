@@ -70,7 +70,7 @@ export class UsersService {
             role: updateUser.role,
             createdAt: updateUser.createdAt,
             updatedAt: updateUser.updatedAt,
-            lastLogin: updateUser.lastLogin, // ใช้ lastLogin ที่อัปเดตล่าสุด
+            lastLogin: updateUser.lastLogin,
         },
     };
 }

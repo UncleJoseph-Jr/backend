@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsOptional, IsString, MinLength, MaxLength } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsOptional, IsString, MinLength, MaxLength, IsNumber } from 'class-validator';
 
 export class CreateMerchantDto {
   @IsNotEmpty()
@@ -33,4 +33,12 @@ export class CreateMerchantDto {
   @MinLength(6)
   @MaxLength(50)
   password: string;
+
+  @IsOptional()
+  @IsNumber()
+  latitude?: number;
+
+  @IsOptional()
+  @IsNumber()
+  longitude?: number;
 }
