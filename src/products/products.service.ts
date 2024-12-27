@@ -46,4 +46,20 @@ export class ProductsService {
       where: { merchantId },
     });
   }
+
+  // เพิ่มฟังก์ชันสำหรับอัปเดตรูปภาพสินค้า
+  async updateProductImage(productId: number, imagePath: string) {
+    const product = await this.prisma.product.findUnique({
+      where: { id: productId },
+    });
+
+    if (!product) {
+      throw new NotFoundException('Product not found');
+    }
+
+    return this.prisma.product.update({
+      where: { id: productId },
+      data: { imageUrl: imagePath }, // อัปเดต path รูปภาพในฐานข้อมูล
+    });
+  }
 }
