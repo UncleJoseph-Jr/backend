@@ -59,10 +59,6 @@ export class ProductsService {
     });
   }
 
-<<<<<<< HEAD
-=======
-  // เพิ่มฟังก์ชันสำหรับอัปเดตรูปภาพสินค้า
->>>>>>> d13d93d500124cf0811e5da41ea5140702091ed3
   async updateProductImage(productId: number, imagePath: string) {
     const product = await this.prisma.product.findUnique({
       where: { id: productId },
@@ -74,14 +70,7 @@ export class ProductsService {
 
     return this.prisma.product.update({
       where: { id: productId },
-<<<<<<< HEAD
       data: { imageUrl: imagePath },
     });
   }
 }
-=======
-      data: { imageUrl: imagePath }, // อัปเดต path รูปภาพในฐานข้อมูล
-    });
-  }
-}
->>>>>>> d13d93d500124cf0811e5da41ea5140702091ed3
