@@ -5,5 +5,8 @@ export class UpdateMerchantDto {
     openingTime: string;
     closingTime: string;
     phoneNumber: string;
-
+    email: String;
+    password: string;
+    latitude: number;
+    longitude: number;
 }

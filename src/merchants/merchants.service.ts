@@ -90,9 +90,29 @@ export class MerchantsService {
   }
 
   async updateMerchant(id: number, dto: UpdateMerchantDto) {
+
+    const existingMerchant = await this.prisma.merchant.findUnique({
+      where: { id },
+    });
+
+    if (!existingMerchant) {
+      throw new Error(`Merchant with id ${id} not found`);
+    }
+
     return this.prisma.merchant.update({
       where: { id },
-      data: dto,
+      data: {
+        name: dto.name as string,
+        email: dto.email as string,
+        password: dto.password as string,
+        category: dto.category as string,
+        description: dto.description as string,
+        openingTime: dto.openingTime as string,
+        closingTime: dto.closingTime as string,
+        phoneNumber: dto.phoneNumber as string,
+        latitude: dto.latitude ? parseFloat(dto.latitude as unknown as string) : existingMerchant.latitude,
+        longitude: dto.longitude ? parseFloat(dto.longitude as unknown as string) : existingMerchant.longitude,
+      }
     });
   }
 
