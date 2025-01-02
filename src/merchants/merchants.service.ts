@@ -99,12 +99,18 @@ export class MerchantsService {
       throw new Error(`Merchant with id ${id} not found`);
     }
 
+    let hashedPassword = existingMerchant.password;
+    if (dto.password) {
+      const saltRounds = 10;
+      hashedPassword = await bcrypt.hash(dto.password, saltRounds);
+    }
+
     return this.prisma.merchant.update({
       where: { id },
       data: {
         name: dto.name as string,
         email: dto.email as string,
-        password: dto.password as string,
+        password: hashedPassword,
         category: dto.category as string,
         description: dto.description as string,
         openingTime: dto.openingTime as string,
@@ -112,7 +118,7 @@ export class MerchantsService {
         phoneNumber: dto.phoneNumber as string,
         latitude: dto.latitude ? parseFloat(dto.latitude as unknown as string) : existingMerchant.latitude,
         longitude: dto.longitude ? parseFloat(dto.longitude as unknown as string) : existingMerchant.longitude,
-      }
+      },
     });
   }
 
