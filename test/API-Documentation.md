@@ -121,3 +121,179 @@ This guide provides an overview of the API endpoints available in your project, 
     "statusCode": 401
     }
     ```
+
+## Merchants Module
+
+### 1. Register Merchant
+  - Endpoint: `/merchants/register`
+  - Method: `POST`
+  - Description: Registers a new merchant.
+  - Request Body:
+  ```bash
+  {
+    "name": "Test Merchant",
+    "phoneNumber": "123456789",
+    "category": "Food",
+    "description": "A test merchant for food delivery",
+    "openingTime": "08:00",
+    "closingTime": "20:00",
+    "email": "merchant111@test.com",
+    "password": "password123",
+    "latitude": 13.7563,
+    "longitude": 100.5018
+}
+
+  ```
+
+  - Response:
+    - `201` Created: Merchant successfully registered.
+    - `400` Bad Request: Validation error.
+
+  ### 2. Get Merchant by ID
+
+  - Endpoint: `/merchants/:id`
+  - Method: `GET`
+  - Description: Retrieves details of a merchant by ID.
+  - Response:
+    - `200` OK: Merchant details returned.
+    - `404` Not Found: Merchant not found.
+
+  ### 3. Update Merchant
+  - Endpoint: `/merchants/:id`
+  - Method: `PUT`
+  - Description: Updates merchant details.
+  - Request Body:
+  ```bash
+  {
+    "name": "string1",
+    "emaiil": "email@fmail.com",
+    "password": "password123",
+    "category": "string description",
+    "description": "string",
+    "openingTime": "08:00",
+    "closingTime": "22:00",
+    "phoneNumber": "8689687678",
+    "latitude": "44.44",
+    "longitude": "33.33"
+  }
+  ```
+  - Response:
+    - `200 OK`: Merchant successfully updated.
+    ```bash
+    {
+      "id": 1,
+      "name": "string1",
+      "email": "merchant111@test.com",
+      "password": "$2a$10$LaNBCOES/C2AxYOm/JABLeLjYRJWBEa.2VXX74WknZG/FYzrJpWDS",
+      "latitude": 13.7563,
+      "longitude": 100.5018,
+      "category": "string description",
+      "description": "string",
+      "openingTime": "08:00",
+      "closingTime": "22:00",
+      "phoneNumber": "8689687678",
+      "isVerified": false,
+      "createdAt": "2024-12-26T09:49:38.299Z",
+      "updatedAt": "2025-01-01T10:38:22.826Z"
+    }
+    ```
+    - `400 Bad Request`: Validation error.
+
+  ### 4. Delete Merchant
+  - Endpoint: `/merchants/:id`
+  - Method: `DELETE`
+  - Description: Deletes a merchant by ID.
+  - Response:
+    - `200 OK`: Merchant successfully deleted.
+    - `404 Not Found`: Merchant not found.
+
+  ### 5. Verify Merchant
+  - Endpoint: `/merchants/:id/verify`
+  - Method: `PUT`
+  - Description: Verifies a merchant.
+  - Response:
+    - `200 OK`: Merchant verified.
+    ```bash
+    {
+      "id": 1,
+      "name": "string1",
+      "email": "merchant111@test.com",
+      "password": "password123",
+      "latitude": 44.44,
+      "longitude": 33.33,
+      "category": "string description",
+      "description": "string",
+      "openingTime": "08:00",
+      "closingTime": "22:00",
+      "phoneNumber": "8689687678",
+      "isVerified": true,  <-------------------> false to true
+      "createdAt": "2024-12-26T09:49:38.299Z",
+      "updatedAt": "2025-01-02T10:20:17.731Z"
+    }
+    ```
+    - `404 Not Found`: Merchant not found.
+
+# Products Module
+
+## 1. Add Product
+
+- Endpoint: `/products`
+- Method: `POST`
+- Description: Adds a new product.
+- Request Body:
+  ```bash
+  {
+    "name": "Test Product",
+    "description": "This is a test product.",
+    "price": 111,
+    "category": "Electronics",
+    "merchantId": 1
+  }
+  ```
+- Response:
+  - `201 Created`: Product successfully added.
+  - `400 Bad Request`: Validation error.
+
+## 2. Get Product by ID
+
+- Endpoint: `/products/:id`
+- Method: `GET`
+- Description: Retrieves details of a product by ID.
+- Response:
+  - `200 OK`: Product details returned.
+  - `404 Not Found`: Product not found.
+
+## 3. Update Product
+
+- Endpoint: `/products/:id`
+- Method: `PUT`
+- Description: Updates product details.
+- Request Body:
+  ```bash
+  {
+    "name": "string",
+    "price": "number",
+    "description": "string"
+  }
+  ```
+- Response:
+  - `200 OK`: Product successfully updated.
+  - `400 Bad Request`: Validation error.
+
+## 4. Delete Product
+- Endpoint: /products/:id
+- Method: DELETE
+- Description: Deletes a product by ID.
+- Response:
+  - 200 OK: Product successfully deleted.
+  - 404 Not Found: Product not found.
+
+## 5. Upload Product Image
+
+- Endpoint: `/products/:id/upload`
+- Method: `POST`
+- Description: Uploads an image for a product.
+- Request Body: Multipart form-data with file field.
+- Response:
+  - `200 OK`: Image successfully uploaded.
+  - `400 Bad Request`: Validation error.
