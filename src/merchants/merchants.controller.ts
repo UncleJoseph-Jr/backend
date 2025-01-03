@@ -6,7 +6,9 @@ import {
     Delete, 
     Body, 
     Param, 
-    BadRequestException 
+    BadRequestException,
+    HttpCode,
+    HttpStatus
 } from '@nestjs/common';
 import { MerchantsService } from './merchants.service';
 import { CreateMerchantDto } from './dto/create-merchant.dto';
@@ -53,12 +55,17 @@ export class MerchantsController {
     }
 
     @Delete(':id')
-    deleteMerchant(@Param('id') id: string) {
-        const merchantId = parseInt(id, 10);
-        if (isNaN(merchantId)) {
-            throw new BadRequestException('Invalid merchant ID');
-        }
-        return this.merchantsService.deleteMerchant(merchantId);
+    // deleteMerchant(@Param('id') id: string) {
+    //     const merchantId = parseInt(id, 10);
+    //     if (isNaN(merchantId)) {
+    //         throw new BadRequestException('Invalid merchant ID');
+    //     }
+    //     return this.merchantsService.deleteMerchant(merchantId);
+    // }
+    @HttpCode(HttpStatus.OK)
+    async deleteMerchant(@Param('id') id: string): Promise<{ message: string }> {
+        await this.merchantsService.deleteMerchantById(+id);
+        return { message: 'Delete Merchant Successfully!!'}
     }
 
     @Put(':id/verify')

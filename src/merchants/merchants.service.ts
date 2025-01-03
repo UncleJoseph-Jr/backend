@@ -135,6 +135,12 @@ export class MerchantsService {
     });
   }
 
+  async deleteMerchantById(id: number): Promise<void> {
+    await this.prisma.merchant.delete({
+      where: { id },
+    })
+  }
+
   async verifyMerchant(id: number) {
     return this.prisma.merchant.update({
       where: { id },
