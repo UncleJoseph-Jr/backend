@@ -281,8 +281,8 @@ This guide provides an overview of the API endpoints available in your project, 
   - `400 Bad Request`: Validation error.
 
 ## 4. Delete Product
-- Endpoint: /products/:id
-- Method: DELETE
+- Endpoint: `/products/:id`
+- Method: `DELETE`
 - Description: Deletes a product by ID.
 - Response:
   - 200 OK: Product successfully deleted.
