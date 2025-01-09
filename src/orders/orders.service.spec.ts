@@ -1,3 +1,4 @@
+// src/orders/orders.service.spec.ts
 import { Test, TestingModule } from '@nestjs/testing';
 import { OrdersService } from './orders.service';
 
@@ -12,7 +13,26 @@ describe('OrdersService', () => {
     service = module.get<OrdersService>(OrdersService);
   });
 
-  it('should be defined', () => {
-    expect(service).toBeDefined();
+  it('should create an order', () => {
+    const order = service.createOrder({
+      userId: 1,
+      items: [{ productId: 1, quantity: 2 }],
+      totalPrice: 200,
+    });
+    expect(order).toBeDefined();
+    expect(order.status).toEqual('PENDING');
+  });
+
+  it('should update order status', () => {
+    service.createOrder({
+      userId: 1,
+      items: [{ productId: 1, quantity: 2 }],
+      totalPrice: 200,
+    });
+    const updatedOrder = service.updateOrderStatus({
+      orderId: 1,
+      status: 'CONFIRMED',
+    });
+    expect(updatedOrder.status).toEqual('CONFIRMED');
   });
 });
