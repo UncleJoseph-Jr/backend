@@ -1,5 +1,4 @@
-import { OrderStatus } from '../enum/orders-status.enum';
-
+import { OrderStatus } from "../enum/orders-status.enum";
 export interface Order {
     id: number;
     userId: number;

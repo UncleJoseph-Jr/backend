@@ -1,13 +1,15 @@
 // src/orders/orders.service.spec.ts
 import { Test, TestingModule } from '@nestjs/testing';
 import { OrdersService } from './orders.service';
+import { OrderStatus } from './enum/orders-status.enum';
+import { PrismaService } from '@src/prisma/prisma.service';
 
 describe('OrdersService', () => {
   let service: OrdersService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [OrdersService],
+      providers: [OrdersService, PrismaService],
     }).compile();
 
     service = module.get<OrdersService>(OrdersService);
@@ -31,7 +33,7 @@ describe('OrdersService', () => {
     });
     const updatedOrder = service.updateOrderStatus({
       orderId: 1,
-      status: 'CONFIRMED',
+      status: OrderStatus.CONFIRMED,
     });
     expect(updatedOrder.status).toEqual('CONFIRMED');
   });

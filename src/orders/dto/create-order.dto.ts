@@ -1,5 +1,4 @@
-import { IsNotEmpty, IsArray, IsNumber } from 'class-validator';
-
+import { IsNotEmpty, IsArray, IsNumber } from "class-validator";
 export class CreateOrderDto {
     @IsNotEmpty()
     userId: number;

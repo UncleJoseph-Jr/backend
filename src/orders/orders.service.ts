@@ -1,14 +1,14 @@
-// src/orders/orders.service.ts
 import { Injectable } from '@nestjs/common';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
-import { Order, OrderStatus } from './interfaces/order.interface';
+import { Order } from './interfaces/order.interface';
+import { OrderStatus } from './enum/orders-status.enum';
 
 @Injectable()
 export class OrdersService {
   private orders: Order[] = [];
 
-  createOrder(createOrderDto: CreateOrderDto): Order {
+  createOrder(createOrderDto: CreateOrderDto) {
     const newOrder: Order = {
       id: this.orders.length + 1,
       userId: createOrderDto.userId,
@@ -25,7 +25,7 @@ export class OrdersService {
     return newOrder;
   }
 
-  updateOrderStatus(updateOrderStatusDto: UpdateOrderStatusDto): Order {
+  updateOrderStatus(updateOrderStatusDto: UpdateOrderStatusDto) {
     const order = this.orders.find(o => o.id === updateOrderStatusDto.orderId);
     if (order) {
       order.status = updateOrderStatusDto.status;
