@@ -1,8 +1,7 @@
-// src/orders/orders.service.spec.ts
 import { Test, TestingModule } from '@nestjs/testing';
 import { OrdersService } from './orders.service';
 import { OrderStatus } from './enum/orders-status.enum';
-import { PrismaService } from '@src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 
 describe('OrdersService', () => {
   let service: OrdersService;

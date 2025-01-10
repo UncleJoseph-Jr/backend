@@ -35,7 +35,6 @@ export class MerchantsService {
       longitude,
     } = data;
 
-    // ตรวจสอบว่า email มีอยู่แล้วหรือไม่
     const existingMerchant = await this.prisma.merchant.findUnique({
       where: { email },
     });
@@ -43,7 +42,6 @@ export class MerchantsService {
       throw new Error('Email is already registered');
     }
 
-    // เข้ารหัส password
     const hashedPassword = await bcrypt.hash(password, 10);
 
     return await this.prisma.merchant.create({
@@ -75,7 +73,7 @@ export class MerchantsService {
       throw new Error('Invalid email or password');
     }
 
-    // สร้าง JWT Token (ถ้าใช้ระบบ JWT)
+  
     const payload = { sub: merchant.id, role: 'merchant' };
     const token = this.jwtService.sign(payload);
 

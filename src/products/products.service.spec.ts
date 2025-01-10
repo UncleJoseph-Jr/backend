@@ -1,13 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ProductsService } from './products.service';
-import { PrismaService } from '../prisma/prisma.service'; // เพิ่ม PrismaService
+import { PrismaService } from '../prisma/prisma.service';
 
 describe('ProductsService', () => {
   let service: ProductsService;
 
   beforeEach(async () => {
     const mockPrismaService = {
-      // Mock methods หรือ properties ที่ใช้งานใน ProductsService
       product: {
         findMany: jest.fn(),
         findUnique: jest.fn(),
@@ -21,7 +20,7 @@ describe('ProductsService', () => {
       providers: [
         ProductsService,
         {
-          provide: PrismaService, // Mock PrismaService
+          provide: PrismaService,
           useValue: mockPrismaService,
         },
       ],

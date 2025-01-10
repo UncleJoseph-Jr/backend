@@ -8,7 +8,6 @@ import { User } from '@prisma/client';
 export class UsersService {
   constructor(private prisma: PrismaService) {}
 
-  // ลงทะเบียนผู้ใช้
   async register(name: string, email: string, password: string, phoneNumber: string): Promise<User> {
 
     const existingUser = await this.prisma.user.findUnique({
@@ -26,26 +25,23 @@ export class UsersService {
         email,
         password: hashedPassword,
         phoneNumber,
-        role: 'USER', // กำหนด role เป็น USER โดยปริยาย
+        role: 'USER',
       },
     });
     return newUser;
   }
 
-  // ล็อกอินผู้ใช้และสร้าง JWT
   async login(email: string, password: string): Promise<{ accessToken: string; user: any }> { 
     const user = await this.prisma.user.findUnique({
       where: { email },
     });
 
     if (!user) {
-      // เปลี่ยนข้อความ error เป็น 'Email or password is incorrect'
       throw new BadRequestException('Email or password is incorrect');
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      // เปลี่ยนข้อความ error เป็น 'Email or password is incorrect'
       throw new BadRequestException('Email or password is incorrect');
     }
 
@@ -76,21 +72,18 @@ export class UsersService {
 }
 
 
-  // ฟังก์ชันเปลี่ยนรหัสผ่าน
   async changePassword(userId: number, currentPassword: string, newPassword: string): Promise<string> {
 
     // console.log('userId:', userId);
     // console.log('currentPassword:', currentPassword);
     // console.log('newPassword:', newPassword);
     
-  // ตรวจสอบ user โดยใช้ userId
   const user = await this.prisma.user.findUnique({
     where: {
       id: userId,
     },
   });
 
-  // ตรวจสอบว่าพบ user หรือไม่
   if (!user) {
     throw new Error('User not found');
   }
@@ -100,16 +93,13 @@ export class UsersService {
     throw new Error('Invalid current password');
   }
 
-  // ตรวจสอบ password เดิม
   const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
   if (!isPasswordValid) {
     throw new Error('Current password is incorrect');
   }
 
-  // เข้ารหัส password ใหม่
   const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-  // อัปเดต password
   await this.prisma.user.update({
     where: { id: userId },
     data: { password: hashedPassword },
@@ -118,10 +108,15 @@ export class UsersService {
   return 'Password updated successfully';
 }
 
-  // ค้นหาผู้ใช้โดยอีเมล์
   async findByEmail(email: string): Promise<User | null> {
     return this.prisma.user.findUnique({
       where: { email },
     });
   }
+
+  async findAll(): Promise<User[]> {
+    return this.prisma.user.findMany();
+  }
+
+  
 }

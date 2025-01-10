@@ -6,6 +6,7 @@ import {
   UseGuards,
   Request,
   Req,
+  Get,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { RegisterDto } from './dto/register.dto';
@@ -17,7 +18,6 @@ import { AuthGuard } from '@nestjs/passport';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  // Endpoint สำหรับสมัครสมาชิก
   @Post('register')
   async register(@Body() body: RegisterDto) {
     const { name, email, password, phoneNumber } = body;
@@ -29,7 +29,6 @@ export class UsersController {
     }
   }
 
-  // Endpoint สำหรับล็อกอิน
   @Post('login')
   async login(@Body() body: LoginDto) {
     const { email, password } = body;
@@ -37,16 +36,14 @@ export class UsersController {
     return { result };
   }
 
-  // Endpoint สำหรับเปลี่ยนรหัสผ่าน
-  @UseGuards(AuthGuard('jwt')) // ใช้ AuthGuard ที่ลงทะเบียน 'jwt'
+  @UseGuards(AuthGuard('jwt'))
   @Post('changepassword')
   async changePassword(
     @Req() req,
     @Body('currentPassword') currentPassword: string,
     @Body('newPassword') newPassword: string,
   ) {
-    const userId = req.user?.id; // ดึง userId จาก JWT payload
-    // console.log('userId from JWT:', userId); // ตรวจสอบว่า userId ถูกดึงมาหรือไม่
+    const userId = req.user?.id;
     if (!userId) {
       throw new BadRequestException('Invalid user token');
     }
@@ -55,5 +52,10 @@ export class UsersController {
       currentPassword,
       newPassword,
     );
+  }
+
+  @Get()
+  async findAll() {
+    return this.usersService.findAll();
   }
 }
