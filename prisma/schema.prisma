@@ -5,12 +5,12 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client-js" // Specifies the Prisma client as the generator
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "postgresql"      // Specifies PostgreSQL as the database provider
+  url      = env("DATABASE_URL") // Database connection URL from environment variables
 }
 
 // Define the Role enum
@@ -33,79 +33,104 @@ enum Status {
 
 // Define the User model for user accounts
 model User {
-  id                  Int      @id @default(autoincrement()) // Primary key
-  name                String   @db.VarChar(50)               // User's name (max 50 characters)
-  email               String   @unique @db.VarChar(100)      // Unique email address (max 100 characters)
-  password            String                                 // Hashed password
-  phoneNumber         String?  @db.VarChar(20)                // Optional phone number (max 20 characters)
-  role                Role     @default(USER)                // Role, default is USER
-  isActive            Boolean  @default(true)                // Indicates if the user account is active
-  status              Status   @default(ACTIVE)              // Status, default is ACTIVE
-  verificationToken   String?                                // Optional token for email verification
-  createdAt           DateTime @default(now())               // Auto-set creation timestamp
-  updatedAt           DateTime @updatedAt                    // Auto-update modification timestamp
-  lastLogin           DateTime?                              // Last login timestamp  
+  id                Int         @id @default(autoincrement()) // Primary key
+  name              String      @db.VarChar(50)               // User's name (max 50 characters)
+  email             String      @unique @db.VarChar(100)      // Unique email address (max 100 characters)
+  password          String                                    // Hashed password
+  phoneNumber       String?     @db.VarChar(20)               // Optional phone number (max 20 characters)
+  role              Role        @default(USER)                // Role, default is USER
+  isActive          Boolean     @default(true)                // Indicates if the user account is active
+  status            Status      @default(ACTIVE)              // Status, default is ACTIVE
+  verificationToken String?                                   // Optional token for email verification
+  createdAt         DateTime    @default(now())               // Auto-set creation timestamp
+  updatedAt         DateTime    @updatedAt                    // Auto-update modification timestamp
+  lastLogin         DateTime?                                 // Last login timestamp  
 }
 
+// Define the Merchant model
 model Merchant {
-  id                  Int       @id @default(autoincrement())
-  name                String
-  email               String?   @unique
-  password            String?
-  latitude            Float?
-  longitude           Float?
-  category            String
-  description         String?
-  openingTime         String
-  closingTime         String
-  phoneNumber         String?
-  isVerified          Boolean   @default(false)
-  createdAt           DateTime  @default(now())
-  updatedAt           DateTime  @updatedAt
-  menus               Menu[]
-  products            Product[]
+  id                Int         @id @default(autoincrement()) // Primary key
+  name              String                                    // Merchant's name
+  email             String?     @unique                       // Unique email address
+  password          String?                                   // Hashed password
+  latitude          Float?                                    // Latitude for location
+  longitude         Float?                                    // Longitude for location
+  category          String                                    // Category of the merchant
+  description       String?                                   // Optional description of the merchant
+  openingTime       String                                    // Opening time in string format
+  closingTime       String                                    // Closing time in string format
+  phoneNumber       String?                                   // Optional phone number
+  isVerified        Boolean     @default(false)               // Indicates if the merchant is verified
+  createdAt         DateTime    @default(now())               // Auto-set creation timestamp
+  updatedAt         DateTime    @updatedAt                    // Auto-update modification timestamp
+  menus             Menu[]                                    // One-to-many relationship with Menu
+  products          Product[]                                 // One-to-many relationship with Product
 }
 
+// Define the Product model
 model Product {
-  id Int @id @default(autoincrement())
-  name String
-  description String?
-  price Float
-  imageUrl String?
-  category String
-  merchantId Int
-  merchant Merchant @relation(fields: [merchantId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                Int         @id @default(autoincrement()) // Primary key
+  name              String                                    // Product name
+  description       String?                                   // Optional product description
+  price             Float                                     // Product price
+  imageUrl          String?                                   // Optional product image URL
+  category          String                                    // Product category
+  merchantId        Int                                       // Foreign key to Merchant
+  merchant          Merchant    @relation(fields: [merchantId], references: [id]) // Relation to Merchant
+  createdAt         DateTime    @default(now())               // Auto-set creation timestamp
+  updatedAt         DateTime    @updatedAt                    // Auto-update modification timestamp
 }
 
+// Define the Menu model
 model Menu {
-  id                  Int       @id @default(autoincrement())
-  name                String
-  description         String?
-  price               Float
-  imageUrl            String?
-  category            String
-  merchantId          Int
-  merchant            Merchant  @relation(fields: [merchantId], references: [id])
+  id                Int         @id @default(autoincrement()) // Primary key
+  name              String                                    // Menu name
+  description       String?                                   // Optional menu description
+  price             Float                                     // Menu price
+  imageUrl          String?                                   // Optional menu image URL
+  category          String                                    // Menu category
+  merchantId        Int                                       // Foreign key to Merchant
+  merchant          Merchant    @relation(fields: [merchantId], references: [id]) // Relation to Merchant
 }
 
+// Define the Order model
 model Order {
-  id          Int       @id @default(autoincrement())
-  userId      Int
-  driverId    Int?
-  status      String    @default("Pending") // Pending, In Transit, Delivered
-  totalAmount Float
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  items       OrderItem[]
+  id                Int         @id     @default(autoincrement()) // Primary key
+  userId            Int                                       // Foreign key to User
+  driverId          Int?                                      // Optional foreign key to Driver
+  status            String      @default("Pending")           // Order status (e.g., Pending, In Transit, Delivered)
+  totalAmount       Float                                     // Total amount of the order
+  createdAt         DateTime    @default(now())               // Auto-set creation timestamp
+  updatedAt         DateTime    @updatedAt                    // Auto-update modification timestamp
+  items             OrderItem[]                               // One-to-many relationship with OrderItem
 }
 
+// Define the OrderItem model
 model OrderItem {
-  id        Int     @id @default(autoincrement())
-  orderId   Int
-  productId Int
-  quantity  Int
-  price     Float
-  order     Order   @relation(fields: [orderId], references: [id])
+  id                Int         @id @default(autoincrement()) // Primary key
+  orderId           Int                                 // Foreign key to Order
+  productId         Int                                 // Foreign key to Product
+  quantity          Int                                 // Quantity of the product
+  price             Float                               // Price of the product
+  order             Order       @relation(fields: [orderId], references: [id]) // Relation to Order
 }
+
+// Define the Drivers model
+model Drivers {
+  id            Int       @id @default(autoincrement()) // Primary key
+  firstName     String                                  // Driver's first name
+  lastName      String                                  // Driver's last name
+  email         String    @unique                       // Unique email address
+  phone         String    @unique                       // Unique phone number
+  password      String                                  // Hashed password
+  profileImage  String?                                 // Optional profile image
+  licenseImage  String?                                 // Optional license image
+  idCardImage   String?                                 // Optional ID card image
+  isVerified    Boolean   @default(false)               // Indicates if the driver is verified
+  latitude      Float?                                  // Current latitude of the driver
+  longitude     Float?                                  // Current longitude of the driver
+  status        String    @default("Offline")           // Driver's status (e.g., Online, Offline, In Transit)
+  createdAt     DateTime  @default(now())               // Auto-set creation timestamp
+  updatedAt     DateTime  @updatedAt                    // Auto-update modification timestamp
+}
+
