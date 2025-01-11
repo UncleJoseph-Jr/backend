@@ -1,0 +1,2 @@
+DATABASE_URL="postgresql://postgres:password123@localhost:5432/delivery_app_db"
+JWT_SECRET="d2001df078bb34bec814e85e30d636507f8c1fe9f2dab43c2adda978abb96940"
