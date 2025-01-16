@@ -118,5 +118,42 @@ export class UsersService {
     return this.prisma.user.findMany();
   }
 
+  async findUserById(userId: number) {
+    if (!userId || typeof userId != 'number' || userId <= 0) {
+      // throw new Error('Invalid userId provided');
+      throw new BadRequestException('Invalid userId provided');
+      // return null;
+    }
+    // return this.prisma.user.findUnique({
+    //   where: { 
+    //     id: userId,
+    //   },
+    //   select: {
+    //     id: true,
+    //     name: true,
+    //     email: true,
+    //     phoneNumber: true,
+    //     role: true,
+    //     status: true,
+    //     createdAt: true,
+    //   },
+    // });
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        phoneNumber: true,
+        role: true,
+        status: true,
+        createdAt: true,
+      },
+    });
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
+    return user;
+  }
   
 }

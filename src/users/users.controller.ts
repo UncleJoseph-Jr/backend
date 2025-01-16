@@ -13,6 +13,7 @@ import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller('users')
 export class UsersController {
@@ -53,9 +54,20 @@ export class UsersController {
       newPassword,
     );
   }
+  ////////////////////////////////////////////////
 
   @Get()
   async findAll() {
     return this.usersService.findAll();
+  }
+  ////////////////////////////////////////////////
+  @UseGuards(JwtAuthGuard)
+  @Get('profile')
+  async getProfile(@Req() req: any) {
+    const userId = req.user?.id;
+    if (!userId || typeof userId !== 'number') {
+      throw new BadRequestException('Invalid user token or missing userId');
+    }
+    return this.usersService.findUserById(userId);
   }
 }
